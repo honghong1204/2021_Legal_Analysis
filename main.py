@@ -7,7 +7,7 @@ trad_num = {'壹': '一', '貳': '二', '參': '三', '肆': '四', '伍': '五'
             '拾': '十', '佰': "百", "仟": "千", "萬": "万", "億": "亿", ",": "", "兩": "二"}
 cn_digit_pure = ['一', '二', '三', '四', '五', '六', '七', '八', '九']
 arab_digit_pure = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-approximate_words = ['多', '數', '餘']
+approximate_words = ['多', '數', '餘', '上']
 
 
 def trad_num_to_simp_num(to_change):
@@ -33,7 +33,11 @@ def list_to_string_B(inputed_list):
 
 
 def chn_to_arabic(string_to_translate):
-    return cn2an.cn2an(string_to_translate, "smart")
+    try:
+        return int(string_to_translate)
+    # print(string_to_translate, "[B]")
+    except:
+        return cn2an.cn2an(string_to_translate, "smart")
 
 
 def count_files_in_the_folder(DIR):
@@ -49,13 +53,14 @@ def fetch_file_list(route):
 
 
 route_ = input("input_route:")
-# route_ = "C:\\Users\\hongh\\Desktop\\cases\\common"
 new_route = route_.replace("\\", "\\\\")
 file_list = fetch_file_list(new_route)
 error_list = []
 for now in range(len(file_list)):
     try:
+        # for now in range(2):
         f = open(new_route + "\\" + file_list[now], mode="r", encoding="utf-8")
+        # f = open("tries.txt", mode="r", encoding="utf-8")
         inputed_string = f.read()
         listed_inputed_string = list(inputed_string)
         record_i = 0
@@ -106,11 +111,13 @@ for now in range(len(file_list)):
             if i == len(listed_inputed_string) - 1:
                 break
         final_string = list_to_string_B(listed_inputed_string)
-        print(final_string)
+        print("Success", file_list[now])
+        w = open(new_route + "\\" + file_list[now], mode="w", encoding="utf-8")
+        w.write(final_string)
     except:
         error_list.append(file_list[now])
 
 for error in range(len(error_list)):
-    print("****** Remove", error_list[error], "******")
+    print("****** FAIL", error_list[error], "******")
 
 print("Error Rate:", len(error_list) / len(file_list))
